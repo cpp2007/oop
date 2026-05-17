@@ -1,0 +1,181 @@
+create database student_db;
+
+
+use student_db;
+
+
+create table student(
+    id int primary key auto_increment,
+    name varchar(100) not null,
+    mark int not null
+);
+
+/////////////////////////////////////////
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+class DBConnection{
+  static Scanner sc = new Scanner(System.in);
+    public static Connection getConnection(){
+       Connection con=null;
+    try{    
+        Class.forName("com.mysql.cj.jdbc.Driver");
+         con= DriverManager.getConnection("jdbc:mysql://localhost:3306/saurabh","root","avcoe");
+        if(con!=null){
+           System.out.println("connection sucess");
+        }
+        else {
+         System.out.println("connection fail");
+         }
+       }catch(Exception e){
+        System.out.println(e.getMessage());
+       }  
+      return con;
+   }
+  
+   public static void insert(Connection con){
+        System.out.println("enter name :");
+          String name = sc.nextLine();
+           System.out.println();
+        System.out.println("enter mark :");
+          int mark = sc.nextInt();
+     try{  
+          PreparedStatement ps = con.prepareStatement("insert into student (name,mark) values (?,?)");
+           ps.setString(1,name);
+           ps.setInt(2,mark);
+    
+          int i = ps.executeUpdate();
+           if(i>0){
+              System.out.println("insert success");
+           }
+           else{
+               System.out.println("insert fail");
+           }
+      
+         }catch(Exception e){
+            System.out.println(e.getMessage());
+         }
+    }
+    
+    public static void update(Connection con){
+         System.out.println("enter id :");
+           int id = sc.nextInt();
+
+        System.out.println("enter mark :");
+          int mark = sc.nextInt();
+      try{
+         PreparedStatement ps = con. prepareStatement("update student set mark = ? where id =?");
+          ps.setInt(1,mark);
+          ps.setInt(2,id);
+
+         int i = ps.executeUpdate();
+           if(i>0){
+               System.out.println("insert success");
+            }
+            else{
+               System.out.println("insert fail");
+            }
+      
+         }catch(Exception e){
+            System.out.println(e.getMessage());
+         }
+    
+    }
+    public static void delete(Connection con){
+        System.out.println("enter id :");
+          int id = sc.nextInt();
+     try{
+           PreparedStatement ps = con.prepareStatement("delete from student where id=?");
+           ps.setInt(1,id);
+      
+           int i = ps.executeUpdate();
+           if(i>0){
+               System.out.println("delete success");
+            }
+            else{
+               System.out.println("delete fail");
+            }
+      
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    
+    }
+    public static void select(Connection con){
+     try{
+           PreparedStatement ps = con.prepareStatement("select * from student ");
+           
+          ResultSet rs = ps.executeQuery();
+          
+          while(rs.next()){
+            System.out.println(rs.getInt("id")+ " " +rs.getString("name")+" "+rs.getInt("mark"));
+            System.out.println();
+          }
+          
+      
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    
+    }
+}
+
+class Main{
+   public static void main(String[]args){
+     Connection con = DBConnection.getConnection();
+     Scanner sc = new Scanner(System.in);  
+     int choice;
+   try{
+     do{
+          System.out.println("----- student management------");
+          System.out.println("1.insert");
+          System.out.println("2.update");
+          System.out.println("3.delete");
+          System.out.println("4.select");
+          System.out.println("5.exit");
+          System.out.println("enter choice :");
+           choice = sc.nextInt();
+        
+         switch(choice){
+           case 1:
+              DBConnection.insert(con);
+             break;
+            case 2:
+              DBConnection.update(con);
+             break;
+            case 3:
+              DBConnection.delete(con);
+             break; 
+            case 4:
+                DBConnection.select(con);
+             break;
+             case 5:
+                 System.out.println("existing");
+             break;
+             default :
+                System.out.println("invalid choice");
+                break;
+             
+         }
+        }while(choice!=5); 
+
+      }catch(Exception e){
+         System.out.println(e.getMessage());
+      }
+  }  
+}
+
+
+
+
+
+/////////////////////////////////
+
+javac -cp  ".;mysql-connector-java-9.6.0.jar"  Main.java
+
+java -cp ".;mysql-connector-j-9.6.0.jar" Main
