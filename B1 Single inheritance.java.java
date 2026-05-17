@@ -17,12 +17,12 @@ class Employee {
 class Developer extends Employee {
     String projectName;
     Developer(int empId, String name, double salary, String projectName) {
-        super(empId, name, salary);   // Calling parent constructor
+        super(empId, name, salary);  
         this.projectName = projectName;
     }
 
     void displayDeveloper() {
-        displayEmployee();   // Calling parent method
+        displayEmployee();   
         System.out.println("Project Name: " + projectName);
     }
 }
