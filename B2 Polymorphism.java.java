@@ -4,7 +4,7 @@ interface Calculator {
 
 interface Payment {
 
-    void pay(double amount);   // abstract method
+    void pay(double amount); 
 
     default void receipt() {
         System.out.println("Payment Successful. Receipt Generated.");
@@ -33,10 +33,10 @@ public class AllInOneDemo {
 
     public static void main(String[] args) {
 
-        // Static method call
+    
         Payment.paymentInfo();
 
-        // Runtime Polymorphism
+
         Payment p;
 
         p = new CreditCard();
@@ -47,7 +47,7 @@ public class AllInOneDemo {
         p.pay(500);
         p.receipt();
 
-        // Lambda Expression (Functional Interface)
+
         Calculator c = (a, b) -> a + b;
 
         System.out.println("Addition using Lambda: " + c.add(10, 20));
