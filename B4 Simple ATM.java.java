@@ -1,6 +1,6 @@
 import java.util.Scanner;
 class Customer {
-    double balance = 1000;   // Initial balance
+    double balance = 1000; 
 }
 public class SimpleATM {
     public static void main(String[] args) {
@@ -59,7 +59,7 @@ public class SimpleATM {
             } 
             catch (Exception e) {
                 System.out.println("Invalid input! Please enter numbers only.");
-                sc.nextLine(); // clear wrong input
+                sc.nextLine(); 
             }
 
         } while (choice != 4);
