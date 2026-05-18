@@ -2,76 +2,91 @@ import java.util.Scanner;
 
 public class Advancedcalculater {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+public static void main(String[] args) {
 
-        while (true) {
+Scanner scanner = new Scanner(System.in);
 
-            try {
-                System.out.print("Enter first number: ");
-                double num1 = scanner.nextDouble();
+while (true) {
 
-                System.out.print("Enter second number: ");
-                double num2 = scanner.nextDouble();
+try {
 
-                System.out.print("Choose an operation (+, -, *, /, %, ^): ");
-                char operation = scanner.next().charAt(0);
+System.out.print("Enter first number: ");
+double num1 = scanner.nextDouble();
 
-                double result;
+System.out.print("Enter second number: ");
+double num2 = scanner.nextDouble();
 
-                switch (operation) {
-                    case '+':
-                        result = num1 + num2;
-                        break;
+System.out.print("Choose an operation (+, -, *, /, %, ^): ");
+char operation = scanner.next().charAt(0);
 
-                    case '-':
-                        result = num1 - num2;
-                        break;
+double result;
 
-                    case '*':
-                        result = num1 * num2;
-                        break;
+switch (operation) {
 
-                    case '/':
-                        if (num2 != 0) {
-                            result = num1 / num2;
-                        } else {
-                            throw new ArithmeticException("Division by zero is not allowed");
-                        }
-                        break;
+case '+':
+result = num1 + num2;
+break;
 
-                    case '%':
-                        if (num2 != 0) {
-                            result = num1 % num2;
-                        } else {
-                            throw new ArithmeticException("Modulo by zero is not allowed");
-                        }
-                        break;
+case '-':
+result = num1 - num2;
+break;
 
-                    case '^':
-                        result = Math.pow(num1, num2);
-                        break;
+case '*':
+result = num1 * num2;
+break;
 
-                    default:
-                        throw new IllegalArgumentException("Invalid operation");
-                }
+case '/':
 
-                System.out.println("Result = " + result);
+if (num2 != 0) {
+result = num1 / num2;
+} else {
+throw new ArithmeticException("Division by zero is not allowed");
+}
 
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-                scanner.nextLine();
-            }
+break;
 
-            System.out.print("Do you want to perform another calculation (yes/no): ");
-            String choice = scanner.next();
+case '%':
 
-            if (!choice.equalsIgnoreCase("yes")) {
-                System.out.println("Calculator is closing thank you!");
-                break;
-            }
-        }
+if (num2 != 0) {
+result = num1 % num2;
+} else {
+throw new ArithmeticException("Modulo by zero is not allowed");
+}
 
-        scanner.close();
-    }
+break;
+
+case '^':
+result = Math.pow(num1, num2);
+break;
+
+default:
+throw new IllegalArgumentException("Invalid operation");
+
+}
+
+System.out.println("Result = " + result);
+
+} catch (Exception e) {
+
+System.out.println("Error: " + e.getMessage());
+scanner.nextLine();
+
+}
+
+System.out.print("Do you want to perform another calculation (yes/no): ");
+String choice = scanner.next();
+
+if (!choice.equalsIgnoreCase("yes")) {
+
+System.out.println("Calculator is closing thank you!");
+break;
+
+}
+
+}
+
+scanner.close();
+
+}
+
 }
