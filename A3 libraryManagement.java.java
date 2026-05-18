@@ -1,130 +1,190 @@
 import java.util.Scanner;
 
 class Book {
-    String title;
-    boolean isIssued;
-    static int totalBooks = 0;
 
-    public Book(String title) {
-        this.title = title;
-        this.isIssued = false;
-        totalBooks++;
-    }
+String title;
+boolean isIssued;
 
-    public void issueBook() {
-        if (!isIssued) {
-            isIssued = true;
-            System.out.println("Book '" + title + "' has been issued.");
-        } else {
-            System.out.println("Book '" + title + "' is already issued.");
-        }
-    }
+static int totalBooks = 0;
 
-    public void returnBook() {
-        if (isIssued) {
-            isIssued = false;
-            System.out.println("Book '" + title + "' has been returned.");
-        } else {
-            System.out.println("Book '" + title + "' was not issued.");
-        }
-    }
+public Book(String title) {
 
-    public void displayBook() {
-        System.out.println(title + " | " + (isIssued ? "Issued" : "Available"));
-    }
+this.title = title;
+this.isIssued = false;
 
-    public static void displayTotalBooks() {
-        System.out.println("Total Books in Library: " + totalBooks);
-    }
+totalBooks++;
+
+}
+
+public void issueBook() {
+
+if (!isIssued) {
+
+isIssued = true;
+
+System.out.println("Book '" + title + "' has been issued.");
+
+} else {
+
+System.out.println("Book '" + title + "' is already issued.");
+
+}
+
+}
+
+public void returnBook() {
+
+if (isIssued) {
+
+isIssued = false;
+
+System.out.println("Book '" + title + "' has been returned.");
+
+} else {
+
+System.out.println("Book '" + title + "' was not issued.");
+
+}
+
+}
+
+public void displayBook() {
+
+System.out.println(title + " | " + (isIssued ? "Issued" : "Available"));
+
+}
+
+public static void displayTotalBooks() {
+
+System.out.println("Total Books in Library: " + totalBooks);
+
+}
+
 }
 
 public class LibrarySystem {
-    public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+public static void main(String[] args) {
 
-        Book[] library = new Book[5];
-        int count = 0;
+Scanner scanner = new Scanner(System.in);
 
-        while (true) {
+Book[] library = new Book[5];
 
-            System.out.println("\nLibrary Management System");
-            System.out.println("1. Add Book");
-            System.out.println("2. Issue Book");
-            System.out.println("3. Return Book");
-            System.out.println("4. View Books");
-            System.out.println("5. Check Total Books");
-            System.out.println("6. Exit");
+int count = 0;
 
-            System.out.print("Enter your choice: ");
+while (true) {
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+System.out.println("\nLibrary Management System");
 
-            switch (choice) {
+System.out.println("1. Add Book");
+System.out.println("2. Issue Book");
+System.out.println("3. Return Book");
+System.out.println("4. View Books");
+System.out.println("5. Check Total Books");
+System.out.println("6. Exit");
 
-                case 1:
-                    if (count < library.length) {
+System.out.print("Enter your choice: ");
 
-                        System.out.print("Enter Book Title: ");
-                        String title = scanner.nextLine();
+int choice = scanner.nextInt();
 
-                        library[count] = new Book(title);
-                        count++;
+scanner.nextLine();
 
-                        System.out.println("Book added successfully.");
+switch (choice) {
 
-                    } else {
-                        System.out.println("Library is full, can't add more books.");
-                    }
-                    break;
+case 1:
 
-                case 2:
+if (count < library.length) {
 
-                    System.out.print("Enter Book Number to Issue (1-" + count + "): ");
-                    int issueNum = scanner.nextInt();
+System.out.print("Enter Book Title: ");
 
-                    if (issueNum > 0 && issueNum <= count) {
-                        library[issueNum - 1].issueBook();
-                    } else {
-                        System.out.println("Invalid book number.");
-                    }
-                    break;
+String title = scanner.nextLine();
 
-                case 3:
+library[count] = new Book(title);
 
-                    System.out.print("Enter Book Number to Return (1-" + count + "): ");
-                    int returnNum = scanner.nextInt();
+count++;
 
-                    if (returnNum > 0 && returnNum <= count) {
-                        library[returnNum - 1].returnBook();
-                    } else {
-                        System.out.println("Invalid book number.");
-                    }
-                    break;
+System.out.println("Book added successfully.");
 
-                case 4:
+} else {
 
-                    System.out.println("\nLibrary Books:");
+System.out.println("Library is full, can't add more books.");
 
-                    for (int i = 0; i < count; i++) {
-                        System.out.print((i + 1) + ". ");
-                        library[i].displayBook();
-                    }
-                    break;
+}
 
-                case 5:
-                    Book.displayTotalBooks();
-                    break;
+break;
 
-                case 6:
-                    System.out.println("Exiting the system. Thank you!");
-                    scanner.close();
-                    return;
+case 2:
 
-                default:
-                    System.out.println("Invalid choice. Try again.");
-            }
-        }
-    }
+System.out.print("Enter Book Number to Issue (1-" + count + "): ");
+
+int issueNum = scanner.nextInt();
+
+if (issueNum > 0 && issueNum <= count) {
+
+library[issueNum - 1].issueBook();
+
+} else {
+
+System.out.println("Invalid book number.");
+
+}
+
+break;
+
+case 3:
+
+System.out.print("Enter Book Number to Return (1-" + count + "): ");
+
+int returnNum = scanner.nextInt();
+
+if (returnNum > 0 && returnNum <= count) {
+
+library[returnNum - 1].returnBook();
+
+} else {
+
+System.out.println("Invalid book number.");
+
+}
+
+break;
+
+case 4:
+
+System.out.println("\nLibrary Books:");
+
+for (int i = 0; i < count; i++) {
+
+System.out.print((i + 1) + ". ");
+
+library[i].displayBook();
+
+}
+
+break;
+
+case 5:
+
+Book.displayTotalBooks();
+
+break;
+
+case 6:
+
+System.out.println("Exiting the system. Thank you!");
+
+scanner.close();
+
+return;
+
+default:
+
+System.out.println("Invalid choice. Try again.");
+
+}
+
+}
+
+}
+
 }
