@@ -1,181 +1,263 @@
 create database student_db;
 
-
 use student_db;
 
 
 create table student(
     id int primary key auto_increment,
-    name varchar(100) not null,
-    mark int not null
+    name varchar(100),
+    mark int
 );
 
 /////////////////////////////////////////
 
-import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-class DBConnection{
-  static Scanner sc = new Scanner(System.in);
-    public static Connection getConnection(){
-       Connection con=null;
-    try{    
-        Class.forName("com.mysql.cj.jdbc.Driver");
-         con= DriverManager.getConnection("jdbc:mysql://localhost:3306/student_db","root","avcoe");
-        if(con!=null){
-           System.out.println("connection sucess");
-        }
-        else {
-         System.out.println("connection fail");
-         }
-       }catch(Exception e){
-        System.out.println(e.getMessage());
-       }  
-      return con;
-   }
-  
-   public static void insert(Connection con){
-        System.out.println("enter name :");
-          String name = sc.nextLine();
-           System.out.println();
-        System.out.println("enter mark :");
-          int mark = sc.nextInt();
-     try{  
-          PreparedStatement ps = con.prepareStatement("insert into student (name,mark) values (?,?)");
-           ps.setString(1,name);
-           ps.setInt(2,mark);
-    
-          int i = ps.executeUpdate();
-           if(i>0){
-              System.out.println("insert success");
-           }
-           else{
-               System.out.println("insert fail");
-           }
-      
-         }catch(Exception e){
-            System.out.println(e.getMessage());
-         }
-    }
-    
-    public static void update(Connection con){
-         System.out.println("enter id :");
-           int id = sc.nextInt();
+class DBConnection {
 
-        System.out.println("enter mark :");
-          int mark = sc.nextInt();
-      try{
-         PreparedStatement ps = con. prepareStatement("update student set mark = ? where id =?");
-          ps.setInt(1,mark);
-          ps.setInt(2,id);
+    static final String URL = "jdbc:mysql://localhost:3306/student_db";
+    static final String USER = "root";
+    static final String PASSWORD = "avcoe";
 
-         int i = ps.executeUpdate();
-           if(i>0){
-               System.out.println("insert success");
+    static Scanner sc = new Scanner(System.in);
+
+    public static Connection getConnection() {
+
+        Connection con = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            con = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            if (con != null) {
+                System.out.println("Database Connected Successfully");
+            } else {
+                System.out.println("Connection Failed");
             }
-            else{
-               System.out.println("insert fail");
-            }
-      
-         }catch(Exception e){
-            System.out.println(e.getMessage());
-         }
-    
-    }
-    public static void delete(Connection con){
-        System.out.println("enter id :");
-          int id = sc.nextInt();
-     try{
-           PreparedStatement ps = con.prepareStatement("delete from student where id=?");
-           ps.setInt(1,id);
-      
-           int i = ps.executeUpdate();
-           if(i>0){
-               System.out.println("delete success");
-            }
-            else{
-               System.out.println("delete fail");
-            }
-      
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("Connection Error : " + e.getMessage());
         }
-    
+
+        return con;
     }
-    public static void select(Connection con){
-     try{
-           PreparedStatement ps = con.prepareStatement("select * from student ");
-           
-          ResultSet rs = ps.executeQuery();
-          
-          while(rs.next()){
-            System.out.println(rs.getInt("id")+ " " +rs.getString("name")+" "+rs.getInt("mark"));
-            System.out.println();
-          }
-          
-      
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+
+    public static void insertStudent(Connection con) {
+
+        try {
+
+            sc.nextLine();
+
+            System.out.print("Enter Student Name : ");
+            String name = sc.nextLine();
+
+            System.out.print("Enter Student Mark : ");
+            int mark = sc.nextInt();
+
+            con.setAutoCommit(false);
+
+            String query = "INSERT INTO student(name, mark) VALUES(?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setString(1, name);
+            ps.setInt(2, mark);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                con.commit();
+                System.out.println("Student Inserted Successfully");
+            } else {
+                con.rollback();
+                System.out.println("Insert Failed");
+            }
+
+        } catch (Exception e) {
+
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+
+            System.out.println("Insert Error : " + e.getMessage());
         }
-    
+    }
+
+    public static void updateStudent(Connection con) {
+
+        try {
+
+            System.out.print("Enter Student ID : ");
+            int id = sc.nextInt();
+
+            System.out.print("Enter New Mark : ");
+            int mark = sc.nextInt();
+
+            con.setAutoCommit(false);
+
+            String query = "UPDATE student SET mark = ? WHERE id = ?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, mark);
+            ps.setInt(2, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                con.commit();
+                System.out.println("Student Updated Successfully");
+            } else {
+                con.rollback();
+                System.out.println("Update Failed");
+            }
+
+        } catch (Exception e) {
+
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+
+            System.out.println("Update Error : " + e.getMessage());
+        }
+    }
+
+    public static void deleteStudent(Connection con) {
+
+        try {
+
+            System.out.print("Enter Student ID : ");
+            int id = sc.nextInt();
+
+            con.setAutoCommit(false);
+
+            String query = "DELETE FROM student WHERE id = ?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                con.commit();
+                System.out.println("Student Deleted Successfully");
+            } else {
+                con.rollback();
+                System.out.println("Delete Failed");
+            }
+
+        } catch (Exception e) {
+
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+
+            System.out.println("Delete Error : " + e.getMessage());
+        }
+    }
+
+    public static void viewStudents(Connection con) {
+
+        try {
+
+            String query = "SELECT * FROM student";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            System.out.println("\n------ Student Records ------");
+
+            while (rs.next()) {
+
+                System.out.println(
+                        rs.getInt("id") + " | " +
+                        rs.getString("name") + " | " +
+                        rs.getInt("mark"));
+            }
+
+        } catch (Exception e) {
+            System.out.println("View Error : " + e.getMessage());
+        }
     }
 }
 
-class Main{
-   public static void main(String[]args){
-     Connection con = DBConnection.getConnection();
-     Scanner sc = new Scanner(System.in);  
-     int choice;
-   try{
-     do{
-          System.out.println("----- student management------");
-          System.out.println("1.insert");
-          System.out.println("2.update");
-          System.out.println("3.delete");
-          System.out.println("4.select");
-          System.out.println("5.exit");
-          System.out.println("enter choice :");
-           choice = sc.nextInt();
-        
-         switch(choice){
-           case 1:
-              DBConnection.insert(con);
-             break;
-            case 2:
-              DBConnection.update(con);
-             break;
-            case 3:
-              DBConnection.delete(con);
-             break; 
-            case 4:
-                DBConnection.select(con);
-             break;
-             case 5:
-                 System.out.println("existing");
-             break;
-             default :
-                System.out.println("invalid choice");
-                break;
-             
-         }
-        }while(choice!=5); 
+public class Main {
 
-      }catch(Exception e){
-         System.out.println(e.getMessage());
-      }
-  }  
+    public static void main(String[] args) {
+
+        Connection con = DBConnection.getConnection();
+
+        Scanner sc = new Scanner(System.in);
+
+        int choice;
+
+        do {
+
+            System.out.println("\n===== STUDENT MANAGEMENT SYSTEM =====");
+            System.out.println("1. Insert Student");
+            System.out.println("2. Update Student");
+            System.out.println("3. Delete Student");
+            System.out.println("4. View Students");
+            System.out.println("5. Exit");
+
+            System.out.print("Enter Your Choice : ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    DBConnection.insertStudent(con);
+                    break;
+
+                case 2:
+                    DBConnection.updateStudent(con);
+                    break;
+
+                case 3:
+                    DBConnection.deleteStudent(con);
+                    break;
+
+                case 4:
+                    DBConnection.viewStudents(con);
+                    break;
+
+                case 5:
+                    System.out.println("Program Exited");
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice");
+            }
+
+        } while (choice != 5);
+
+        try {
+            con.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
-
 
 
 
 
 /////////////////////////////////
 
-javac -cp  ".;mysql-connector-java-9.6.0.jar"  Main.java
+javac -cp ".;mysql-connector-j-9.6.0.jar" Main.java
 
 java -cp ".;mysql-connector-j-9.6.0.jar" Main
